@@ -130,3 +130,14 @@ describe("Teste da Rota atualizarProduto", () => {
     await Produto.destroy({ where: { id: produtoId } });
   });
 });
+
+describe("Teste da rota itensDoPedido/id", () =>{
+  it("Deve retornar o item do pedido com as informações do cliente", async () =>{
+    const idItemDoPedido = 1;
+    const response = await request(app).get(`/itensDoPedido/${idItemDoPedido}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.pedido.cliente).toBe("nome");
+
+  });
+})
