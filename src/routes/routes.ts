@@ -23,7 +23,7 @@ router.put("/atualizarProduto/:id", ProdutoController.atualizarProduto); //Testa
 router.delete("/excluirProduto/:id", ProdutoController.excluirProduto); //Testada
 
 //PEDIDOS
-router.get("/Pedidos", PedidoController.listarPedidos);
+router.get("/pedidos", PedidoController.listarPedidos);
 router.get("/pedidos/:idPedido", PedidoController.getPedidoById);
 router.post("/incluirPedido", PedidoController.incluirPedido);
 router.put("/atualizarPedido/:id", PedidoController.atualizarPedido);

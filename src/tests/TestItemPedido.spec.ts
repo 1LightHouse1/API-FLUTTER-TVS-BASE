@@ -31,7 +31,7 @@ describe("Teste da Rota incluirProduto", () => {
 
 describe("Teste da Rota getProdutoById", () => {
   it("Deve retornar o produto correto quando o id é válido", async () => {
-    const idProduto = 1; // Supondo que este seja um ID válido existente no seu banco de dados
+    const idProduto = 1; 
     const response = await request(app).get(`/produtos/${idProduto}`);
 
     expect(response.status).toBe(200);
@@ -132,12 +132,45 @@ describe("Teste da Rota atualizarProduto", () => {
 });
 
 describe("Teste da rota itensDoPedido/id", () =>{
-  it("Deve retornar o item do pedido com as informações do cliente", async () =>{
+  it("Deve retornar o item do pedido com as informacoes do cliente", async () =>{
     const idItemDoPedido = 1;
     const response = await request(app).get(`/itensDoPedido/${idItemDoPedido}`);
 
-    expect(response.status).toBe(200);
-    expect(response.body.pedido.cliente).toBe("nome");
+    expect(response.statusCode).toBe(200);
+    expect(response.body.itemDoPedido.pedido.cliente).toHaveProperty("nome");
+    expect(response.body.itemDoPedido.pedido.cliente).toHaveProperty("sobrenome");
+    expect(response.body.itemDoPedido.pedido.cliente).toHaveProperty("cpf");
+
+
+  });
+
+  it("Deve retornar 404 se o item do pedido não for encontrado", async () => {
+    const idItemDoPedido = 2;
+    const response = await request(app).get(`/itensDoPedido/${idItemDoPedido}`);
+
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toHaveProperty("message", "Item do Pedido não encontrado");
+
+  });
+
+  it("Deve retornar o item do pedido em menos de 200ms", async () => {
+    const idItemDoPedido = 1;
+    const tempoInicial = Date.now();
+    const response = await request(app).get(`/itensDoPedido/${idItemDoPedido}`);
+    const tempoResposta = Date.now() - tempoInicial;
+
+
+    expect(response.statusCode).toBe(200);
+    expect(tempoResposta).toBeLessThan(200);
+
+  });
+
+  it("Deve retornar 400 se o ID nao for um numero", async () =>{
+    const idItemDoPedido = "a";
+    const response = await request(app).get(`/itensDoPedido/${idItemDoPedido}`);
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toHaveProperty("message", "O ID DEVE SER UM NUMERO");
 
   });
 })

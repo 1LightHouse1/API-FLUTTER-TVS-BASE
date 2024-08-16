@@ -47,7 +47,7 @@ describe("Teste da Rota incluirPedido", () => {
 
 describe("Teste da Rota getPedidoById", () => {
   it("Deve retornar o pedido correto quando o id é válido", async () => {
-    const idPedido = 1; // Supondo que este seja um ID válido existente no seu banco de dados
+    const idPedido = 1; 
     const response = await request(app).get(`/pedidos/${idPedido}`);
 
     expect(response.status).toBe(200);

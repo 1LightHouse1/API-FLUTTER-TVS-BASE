@@ -74,6 +74,13 @@ describe("Teste da Rota listarClientes", () => {
     expect(response.body.clientes).toBeInstanceOf(Array);
   });
 
+  it("Deve retornar um 404 quando nenhum cliente for encontrado", async () =>{
+    const response = await request(app).get("/clientes"); 
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "Não há clientes cadastrados");
+  })
+
   it("Deve retornar a lista de clientes dentro de um tempo aceitavel", async () => {
     const start = Date.now();
     const response = await request(app).get("/clientes");
