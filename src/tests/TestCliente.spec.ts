@@ -3,6 +3,8 @@ import * as server from "../server";
 import { app } from "../server"; // Certifique-se de que o caminho está correto
 import { Request, Response } from "express";
 import { Cliente } from "../models/Cliente";
+import { Produto } from "../models/Produto";
+import { ItemDoPedido } from "../models/ItemDoPedido";
 
 describe("Teste da Rota incluirCliente", () => {
   let clienteId: number;
@@ -180,6 +182,26 @@ describe("Teste da Rota atualizarCliente", () => {
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "Cliente não encontrado");
   });
+  
+  it('deve falhar ao tentar excluir um produto com itens de pedidos associados', async () => {
+    // Crie um produto e um item de pedido associado
+    const produto = await Produto.create({ descricao: 'Produto Teste' });
+    const itemDoPedido = await ItemDoPedido.create({ id_pedido: 1, id_produto: produto.id, quantidade: 2 });
+
+    // Tente excluir o produto
+    let produtoAindaExiste = false;
+
+    try {
+        await produto.destroy();
+    } catch (error) {
+        // Verifica se o produto ainda existe no banco de dados
+        produtoAindaExiste = (await Produto.findByPk(produto.id)) !== null;
+    }
+
+    // Verifique se o produto ainda existe
+    expect(produtoAindaExiste).toBe(true);
+});
+  
 
   afterAll(async () => {
     // Limpeza dos clientes criados
